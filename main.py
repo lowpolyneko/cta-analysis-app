@@ -342,7 +342,7 @@ def command_9(db: sqlite3.Connection):
         WHERE Latitude BETWEEN {min_lat} AND {max_lat}
         AND Longitude BETWEEN {min_long} AND {max_long}
         GROUP BY Latitude, Longitude
-        ORDER BY Station_Name
+        ORDER BY Station_Name, Latitude, Longitude
     """)
 
     if not stations:
