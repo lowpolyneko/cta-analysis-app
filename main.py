@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import matplotlib.pyplot as plt
 import sqlite3
 
 def command_1(db: sqlite3.Connection):
@@ -133,6 +134,51 @@ def command_5(db: sqlite3.Connection):
     for r in results:
         print(f"{r[0]} going {r[1]} : {r[2]} ({r[2]/total:.2%})")
 
+def command_6(db: sqlite3.Connection):
+    """
+    Matches a partial station name and outputs yearly total ridership
+    @param db database
+    """
+    search = input("Enter a station name (wildcards _ and %): ")
+    matches = execute(db, f"""
+        SELECT * FROM Stations
+        WHERE Station_Name LIKE '{search}'
+        ORDER BY Station_Name ASC
+    """)
+
+    if not matches:
+        print("**No stations found...")
+        return
+
+    if len(matches) > 1:
+        print("**Multiple stations found...")
+        return
+
+    station_id, station_name = matches[0]
+    
+    ridership = execute(db, f"""
+        SELECT CAST(Ride_Date AS DATE), SUM(Num_Riders) FROM Ridership
+        WHERE Station_ID = {station_id}
+        GROUP BY CAST(Ride_Date AS DATE)
+        ORDER BY CAST(Ride_Date AS DATE)
+    """)
+
+    print(f"Yearly Ridership at {station_name}")
+    for r in ridership:
+        print(f"{r[0]} : {r[1]:,}")
+
+    if input("Plot? (y/n) ") == "y":
+        # generate plot
+        plt.title(f"Yearly Ridership at {station_name} Station")
+        plt.xlabel("Year")
+        plt.ylabel("Number of Riders")
+
+        # unpair points
+        x, y = zip(*ridership)
+        plt.xticks(x, rotation=90)
+        plt.plot(x, y)
+        plt.savefig("command_6.png")
+
 def execute(db: sqlite3.Connection, query: str) -> list:
     """
     Helper function that executes query in db
@@ -205,7 +251,8 @@ def main():
             command_5(db)
             continue
         elif i == '6':
-            pass
+            command_6(db)
+            continue
         elif i == '7':
             pass
         elif i == '8':
