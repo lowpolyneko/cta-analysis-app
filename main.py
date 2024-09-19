@@ -356,18 +356,18 @@ def command_9(db: sqlite3.Connection):
     # create plot
     if input("\nPlot? (y/n) ") == "y":
         image = plt.imread("chicago.png")
-        xydims = [-87.9277, -87.5569, 41.7012, 42.0868] # area covered by map
+        xydims = (-87.9277, -87.5569, 41.7012, 42.0868) # area covered by map
         plt.imshow(image, extent=xydims)
         plt.title("Stations Near You")
         plt.xlim(xydims[:2])
         plt.ylim(xydims[-2:])
     
         # plot points
-        _, x_list, y_list = zip(*stations)
-        plt.plot(x_list, y_list)
+        _, y_list, x_list = zip(*stations)
+        plt.plot(x_list, y_list, 'o')
 
-        # plot names
-        for name, x, y in stations:
+        # labels
+        for name, y, x in stations:
             plt.annotate(name, (x, y))
 
         plt.savefig("command_9.png")
