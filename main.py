@@ -18,8 +18,8 @@ def command_1(db: sqlite3.Connection):
         print("**No stations found...")
         return
 
-    for m in matches:
-        print(f"{m[0]} : {m[1]}")
+    for station_id, station_name in matches:
+        print(f"{station_id} : {station_name}")
 
 def command_2(db: sqlite3.Connection):
     """
@@ -78,8 +78,8 @@ def command_3(db: sqlite3.Connection):
     total = sum(n for _, n in results)
 
     print("Ridership on Weekdays for Each Station")
-    for r in results:
-        print(f"{r[0]} : {r[1]:,} ({r[1]/total:.2%})")
+    for station_name, num_riders in results:
+        print(f"{station_name} : {num_riders:,} ({num_riders/total:.2%})")
 
 def command_4(db: sqlite3.Connection):
     """
@@ -110,8 +110,8 @@ def command_4(db: sqlite3.Connection):
         print("**That line does not run in the direction chosen...")
         return
 
-    for s in stops:
-        print(f"{s[0]} : direction = {direction.upper()} ({'' if s[1] else 'not '}handicap accessible)")
+    for stop_name, ada in stops:
+        print(f"{stop_name} : direction = {direction.upper()} ({'' if ada else 'not '}handicap accessible)")
 
 def command_5(db: sqlite3.Connection):
     """
@@ -131,8 +131,8 @@ def command_5(db: sqlite3.Connection):
     """)[0][0]
 
     print("Number of Stops For Each Color By Direction")
-    for r in results:
-        print(f"{r[0]} going {r[1]} : {r[2]} ({r[2]/total:.2%})")
+    for color, direction, count in results:
+        print(f"{color} going {direction} : {count} ({count/total:.2%})")
 
 def command_6(db: sqlite3.Connection):
     """
@@ -164,8 +164,8 @@ def command_6(db: sqlite3.Connection):
     """)
 
     print(f"Yearly Ridership at {station_name}")
-    for r in ridership:
-        print(f"{r[0]} : {r[1]:,}")
+    for year, num_riders in ridership:
+        print(f"{year} : {num_riders:,}")
 
     if input("\n\nPlot? (y/n) ") == "y":
         # generate plot
@@ -211,8 +211,8 @@ def command_7(db: sqlite3.Connection):
     """)
 
     print(f"Monthly Ridership at {station_name} for {year}")
-    for r in ridership:
-        print(f"{r[0]:02}/{year} : {r[1]:,}")
+    for month, num_riders in ridership:
+        print(f"{month:02}/{year} : {num_riders:,}")
 
     if input("\n\nPlot? (y/n) ") == "y":
         # generate plot
@@ -282,16 +282,16 @@ def command_8(db: sqlite3.Connection):
     """)
 
     print(f"Station 1: {station_1_id} {station_1_name}")
-    for r in ridership_1[:5]: # first 5
-        print(f"{r[0]:02} {r[2]}")
-    for r in ridership_1[-5:]: # last 5
-        print(f"{r[0]:02} {r[2]}")
+    for date, num_riders in ridership_1[:5]: # first 5
+        print(f"{date:02} {num_riders}")
+    for date, num_riders in ridership_1[-5:]: # last 5
+        print(f"{date:02} {num_riders}")
 
     print(f"Station 2: {station_2_id} {station_2_name}")
-    for r in ridership_2[:5]: # first 5
-        print(f"{r[0]:02} {r[2]}")
-    for r in ridership_2[-5:]: # last 5
-        print(f"{r[0]:02} {r[2]}")
+    for date, num_riders in ridership_2[:5]: # first 5
+        print(f"{date:02} {num_riders}")
+    for date, num_riders in ridership_2[-5:]: # last 5
+        print(f"{date:02} {num_riders}")
 
     if input("\n\nPlot? (y/n) ") == "y":
         # generate plot
