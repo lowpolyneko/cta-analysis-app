@@ -1,6 +1,25 @@
 #!/usr/bin/env python
 import sqlite3
 
+def command_1(db: sqlite3.Connection):
+    """
+    Matches a partial station name
+    @param db database
+    """
+    search = input("Enter partial station name (wildcards _ and %): ")
+    matches = execute(db, f"""
+        SELECT * FROM Stations
+        WHERE Station_Name LIKE '{search}'
+        ORDER BY Station_Name ASC
+    """)
+
+    if not matches:
+        print("**No stations found...")
+        return
+
+    for m in matches:
+        print(f"{m[0]} : {m[1]}")
+
 def execute(db: sqlite3.Connection, query: str) -> list:
     """
     Helper function that executes query in db
@@ -58,7 +77,8 @@ def main():
         i = input("Please enter a command (1-9, x to exit): ")
 
         if i == '1':
-            pass
+            command_1(db)
+            continue
         elif i == '2':
             pass
         elif i == '3':
