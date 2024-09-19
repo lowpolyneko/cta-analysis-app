@@ -111,7 +111,7 @@ def command_4(db: sqlite3.Connection):
         return
 
     for s in stops:
-        print(f"{s[0]} : direction = {direction.upper()} ({'not ' if s[1] else ''}handicap accessible)")
+        print(f"{s[0]} : direction = {direction.upper()} ({'' if s[1] else 'not '}handicap accessible)")
 
 def command_5(db: sqlite3.Connection):
     """
