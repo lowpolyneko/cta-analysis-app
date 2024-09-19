@@ -312,6 +312,63 @@ def command_8(db: sqlite3.Connection):
         plt.legend()
         plt.savefig("command_8.png")
 
+def command_9(db: sqlite3.Connection):
+    """
+    Given a set of lat/long, find all stations within a square mile
+    @param db database
+    """
+    lat = float(input("Enter a latitude: "))
+    long = float(input("Enter a longitude: "))
+
+    if lat < 40 or lat > 43:
+        print("**Latitude entered is out of bounds...")
+        return
+
+    if long < -88 or long > -87:
+        print("**Longitude entered is out of bounds...")
+        return
+
+    # each lat is 69 miles apart
+    # each long is 51 miles apart
+    min_lat = round(lat-(1/69), 3)
+    max_lat = round(lat+(1/69), 3)
+
+    min_long = round(long-(1/51), 3)
+    max_long = round(long+(1/51), 3)
+
+    # run query
+    stations = execute(db, f"""
+        SELECT Station_Name, Latitude, Longitude FROM Stops
+        JOIN Stations ON Stops.Station_ID = Stations.Station_ID
+        WHERE Latitude BETWEEN {min_lat} AND {max_lat}
+        AND Longitude BETWEEN {min_long} AND {max_long}
+        GROUP BY Stations.Station_ID
+        ORDER BY Station_Name
+    """)
+
+    print("List of Stations Within a Mile")
+    for name, x, y in stations:
+        print(f"{name} : ({x}, {y})")
+
+    # create plot
+    if input("Plot? (y/n) ") == "y":
+        image = plt.imread("chicago.png")
+        xydims = [-87.9277, -87.5569, 41.7012, 42.0868] # area covered by map
+        plt.imshow(image, extent=xydims)
+        plt.title("Stations Near You")
+        plt.xlim(xydims[:2])
+        plt.ylim(xydims[-2:])
+    
+        # plot points
+        _, x_list, y_list = zip(*stations)
+        plt.plot(x_list, y_list)
+
+        # plot names
+        for name, x, y in stations:
+            plt.annotate(name, (x, y))
+
+        plt.savefig("command_9.png")
+
 def execute(db: sqlite3.Connection, query: str) -> list:
     """
     Helper function that executes query in db
@@ -393,7 +450,8 @@ def main():
             command_8(db)
             continue
         elif i == '9':
-            pass
+            command_9(db)
+            continue
         elif i == 'x':
             break
 
