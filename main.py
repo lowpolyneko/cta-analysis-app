@@ -89,7 +89,7 @@ def command_4(db: sqlite3.Connection):
     color = input("Enter a line color (e.g. Red or Yellow): ")
     line = execute(db, f"""
         SELECT Line_ID FROM Lines
-        Where Color = "{color}"
+        Where LOWER(Color) = LOWER("{color}")
     """)
 
     if not line:
@@ -102,7 +102,7 @@ def command_4(db: sqlite3.Connection):
     stops = execute(db, f"""
         SELECT Stop_Name, ADA FROM Stops
         JOIN StopDetails ON Stops.Stop_ID = StopDetails.Stop_ID
-        WHERE Line_ID = '{line_id}' AND Direction = '{direction}'
+        WHERE Line_ID = '{line_id}' AND LOWER(Direction) = LOWER('{direction}')
         ORDER BY Stop_Name
     """)
 
