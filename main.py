@@ -282,15 +282,15 @@ def command_8(db: sqlite3.Connection):
     """)
 
     print(f"Station 1: {station_1_id} {station_1_name}")
-    for date, num_riders in ridership_1[:5]: # first 5
+    for date, _, num_riders in ridership_1[:5]: # first 5
         print(f"{date:02} {num_riders}")
-    for date, num_riders in ridership_1[-5:]: # last 5
+    for date, _, num_riders in ridership_1[-5:]: # last 5
         print(f"{date:02} {num_riders}")
 
     print(f"Station 2: {station_2_id} {station_2_name}")
-    for date, num_riders in ridership_2[:5]: # first 5
+    for date, _, num_riders in ridership_2[:5]: # first 5
         print(f"{date:02} {num_riders}")
-    for date, num_riders in ridership_2[-5:]: # last 5
+    for date, _, num_riders in ridership_2[-5:]: # last 5
         print(f"{date:02} {num_riders}")
 
     if input("\n\nPlot? (y/n) ") == "y":
