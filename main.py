@@ -80,6 +80,59 @@ def command_3(db: sqlite3.Connection):
     for r in results:
         print(f"{r[0]} : {r[1]:,} ({r[1]/total:.2%})")
 
+def command_4(db: sqlite3.Connection):
+    """
+    Print all stops for line in direction
+    @param db database
+    """
+    color = input("Enter a line color (e.g. Red or Yellow): ")
+    line = execute(db, f"""
+        SELECT Line_ID FROM Lines
+        Where Color = '{color}'
+    """)
+
+    if not line:
+        print("**No such line...")
+        return
+
+    direction = input("Enter a direction (N/S/W/E): ")
+
+    line_id = line[0][0]
+    stops = execute(db, f"""
+        SELECT Stop_Name, ADA FROM Stops
+        JOIN StopDetails ON Stops.Stop_ID = StopDetails.Stop_ID
+        WHERE Line_ID = '{line_id}' AND Direction = '{direction}'
+        ORDER BY Stop_Name
+    """)
+
+    if not stops:
+        print("That line does not run in the direction chosen...")
+        return
+
+    for s in stops:
+        print(f"{s[0]} : direction = {direction} {'(handicap accessible)' if s[1] else ''}")
+
+def command_5(db: sqlite3.Connection):
+    """
+    Number of stops for each line color grouped by direction
+    @param db database
+    """
+    results = execute(db, """
+        SELECT Color, Direction, COUNT(Direction) FROM Stops
+        JOIN StopDetails ON Stops.Stop_ID = StopDetails.Stop_ID
+        JOIN Lines ON StopDetails.Line_ID = Lines.Line_ID
+        GROUP BY Color, Direction
+        ORDER BY Color, Direction
+    """)
+
+    total = execute(db, """
+        SELECT COUNT(Stops.Stop_ID) FROM Stops
+    """)[0][0]
+
+    print("Number of Stops For Each Color By Direction")
+    for r in results:
+        print(f"{r[0]} going {r[1]} : {r[2]} ({r[2]/total:.2%})")
+
 def execute(db: sqlite3.Connection, query: str) -> list:
     """
     Helper function that executes query in db
@@ -146,9 +199,11 @@ def main():
             command_3(db)
             continue
         elif i == '4':
-            pass
+            command_4(db)
+            continue
         elif i == '5':
-            pass
+            command_5(db)
+            continue
         elif i == '6':
             pass
         elif i == '7':
