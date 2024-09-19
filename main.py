@@ -77,7 +77,7 @@ def command_3(db: sqlite3.Connection):
 
     total = sum(n for _, n in results)
 
-    print("Ridership for Weekdays for Each Station")
+    print("Ridership on Weekdays for Each Station")
     for r in results:
         print(f"{r[0]} : {r[1]:,} ({r[1]/total:.2%})")
 
