@@ -317,8 +317,8 @@ def command_9(db: sqlite3.Connection):
     Given a set of lat/long, find all stations within a square mile
     @param db database
     """
-    lat = float(input("\n\nEnter a latitude: "))
-    long = float(input("\n\nEnter a longitude: "))
+    lat = float(input("Enter a latitude: "))
+    long = float(input("Enter a longitude: "))
 
     if lat < 40 or lat > 43:
         print("**Latitude entered is out of bounds...")
