@@ -139,7 +139,7 @@ def command_6(db: sqlite3.Connection):
     Matches a partial station name and outputs yearly total ridership
     @param db database
     """
-    search = input("\n\nEnter a station name (wildcards _ and %): ")
+    search = input("Enter a station name (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -184,7 +184,7 @@ def command_7(db: sqlite3.Connection):
     Matches a partial station name and outputs monthly ridership for a year
     @param db database
     """
-    search = input("\n\nEnter a station name (wildcards _ and %): ")
+    search = input("Enter a station name (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -233,7 +233,7 @@ def command_8(db: sqlite3.Connection):
     """
     year = input("\n\nYear to compare against? ")
 
-    search = input("\n\nEnter station 1 (wildcards _ and %): ")
+    search = input("Enter station 1 (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -250,7 +250,7 @@ def command_8(db: sqlite3.Connection):
 
     station_1_id, station_1_name = matches[0]
 
-    search = input("\n\nEnter station 2 (wildcards _ and %): ")
+    search = input("Enter station 2 (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
