@@ -56,10 +56,29 @@ def command_2(db: sqlite3.Connection):
     total = weekday + saturday + sunday
 
     print(f"Percentage of ridership for the {search} station:")
-    print(f"  Weekday ridership: {weekday:,} {weekday/total:.2%}")
-    print(f"  Saturday ridership: {saturday:,} {saturday/total:.2%}")
-    print(f"  Sunday/holiday ridership: {sunday:,} {sunday/total:.2%}")
+    print(f"  Weekday ridership: {weekday:,} ({weekday/total:.2%})")
+    print(f"  Saturday ridership: {saturday:,} ({saturday/total:.2%})")
+    print(f"  Sunday/holiday ridership: {sunday:,} ({sunday/total:.2%})")
     print(f"  Total ridership: {total:,}")
+
+def command_3(db: sqlite3.Connection):
+    """
+    Prints weekday ridership for all stations
+    @param db database
+    """
+    results = execute(db, """
+        SELECT Station_Name, SUM(Num_Riders) FROM Ridership
+        JOIN Stations ON Ridership.Station_ID = Stations.Station_ID
+        WHERE Ridership.Type_of_day = 'W'
+        GROUP BY Ridership.Station_ID
+        ORDER BY SUM(Num_Riders) DESC
+        """)
+
+    total = sum(n for _, n in results)
+
+    print("Ridership for Weekdays for Each Station")
+    for r in results:
+        print(f"{r[0]} : {r[1]:,} ({r[1]/total:.2%})")
 
 def execute(db: sqlite3.Connection, query: str) -> list:
     """
@@ -124,7 +143,8 @@ def main():
             command_2(db)
             continue
         elif i == '3':
-            pass
+            command_3(db)
+            continue
         elif i == '4':
             pass
         elif i == '5':
