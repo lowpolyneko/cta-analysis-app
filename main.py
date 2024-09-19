@@ -107,7 +107,7 @@ def command_4(db: sqlite3.Connection):
     """)
 
     if not stops:
-        print("That line does not run in the direction chosen...")
+        print("**That line does not run in the direction chosen...")
         return
 
     for s in stops:
@@ -147,7 +147,7 @@ def command_6(db: sqlite3.Connection):
     """)
 
     if not matches:
-        print("**No stations found...")
+        print("**No station found...")
         return
 
     if len(matches) > 1:
@@ -192,7 +192,7 @@ def command_7(db: sqlite3.Connection):
     """)
 
     if not matches:
-        print("**No stations found...")
+        print("**No station found...")
         return
 
     if len(matches) > 1:
@@ -231,7 +231,7 @@ def command_8(db: sqlite3.Connection):
     Compares the ridership of two stations within a year
     @param db database
     """
-    year = input("Year to compare against? ")
+    year = input("\nYear to compare against? ")
 
     search = input("\nEnter station 1 (wildcards _ and %): ")
     matches = execute(db, f"""
@@ -318,7 +318,7 @@ def command_9(db: sqlite3.Connection):
     @param db database
     """
     lat = float(input("\nEnter a latitude: "))
-    long = float(input("\nEnter a longitude: "))
+    long = float(input("Enter a longitude: "))
 
     if lat < 40 or lat > 43:
         print("**Latitude entered is out of bounds...")
@@ -346,7 +346,7 @@ def command_9(db: sqlite3.Connection):
         ORDER BY Station_Name
     """)
 
-    print("List of Stations Within a Mile")
+    print("\nList of Stations Within a Mile")
     for name, x, y in stations:
         print(f"{name} : ({x}, {y})")
 
