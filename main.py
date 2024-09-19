@@ -350,7 +350,7 @@ def command_9(db: sqlite3.Connection):
         print(f"{name} : ({x}, {y})")
 
     # create plot
-    if input("\n\nPlot? (y/n) ") == "y":
+    if input("\nPlot? (y/n) ") == "y":
         image = plt.imread("chicago.png")
         xydims = [-87.9277, -87.5569, 41.7012, 42.0868] # area covered by map
         plt.imshow(image, extent=xydims)
