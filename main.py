@@ -410,7 +410,7 @@ def print_stats(db: sqlite3.Connection):
     print("General Statistics:")
     print(f"  # of stations: {stations:,}")
     print(f"  # of stops: {stops:,}")
-    print(f"  # of rides: {rides:,}")
+    print(f"  # of ride entries: {rides:,}")
     print(f"  date range: {date_range[0]} - {date_range[1]}")
     print(f"  Total ridership: {total_ridership:,}")
 
