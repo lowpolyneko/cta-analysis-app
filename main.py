@@ -20,6 +20,47 @@ def command_1(db: sqlite3.Connection):
     for m in matches:
         print(f"{m[0]} : {m[1]}")
 
+def command_2(db: sqlite3.Connection):
+    """
+    Prints weekly ridership of a station
+    @param db database
+    """
+    search = input("Enter the name of the station you would like to analyze: ")
+    match = execute(db, f"""
+        SELECT Station_ID FROM Stations WHERE Station_Name = '{search}'
+    """)
+
+    if not match:
+        print("**No data found...")
+        return
+
+    # run weekly, saturday, sunday ridership queries
+    station_id = match[0][0]
+
+    weekday = execute(db, f"""
+        SELECT SUM(Num_Riders) FROM Ridership
+        WHERE Station_ID = {station_id}
+        AND Type_of_Day = 'W'
+    """)[0][0]
+    saturday = execute(db, f"""
+        SELECT SUM(Num_Riders) FROM Ridership
+        WHERE Station_ID = {station_id}
+        AND Type_of_Day = 'A'
+    """)[0][0]
+    sunday = execute(db, f"""
+        SELECT SUM(Num_Riders) FROM Ridership
+        WHERE Station_ID = {station_id}
+        AND Type_of_Day = 'U'
+    """)[0][0]
+
+    total = weekday + saturday + sunday
+
+    print(f"Percentage of ridership for the {search} station:")
+    print(f"  Weekday ridership: {weekday:,} {weekday/total:.2%}")
+    print(f"  Saturday ridership: {saturday:,} {saturday/total:.2%}")
+    print(f"  Sunday/holiday ridership: {sunday:,} {sunday/total:.2%}")
+    print(f"  Total ridership: {total:,}")
+
 def execute(db: sqlite3.Connection, query: str) -> list:
     """
     Helper function that executes query in db
@@ -80,7 +121,8 @@ def main():
             command_1(db)
             continue
         elif i == '2':
-            pass
+            command_2(db)
+            continue
         elif i == '3':
             pass
         elif i == '4':
