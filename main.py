@@ -241,7 +241,7 @@ def command_8(db: sqlite3.Connection):
     """)
 
     if not matches:
-        print("**No stations found...")
+        print("**No station found...")
         return
 
     if len(matches) > 1:
@@ -258,7 +258,7 @@ def command_8(db: sqlite3.Connection):
     """)
 
     if not matches:
-        print("**No stations found...")
+        print("**No station found...")
         return
 
     if len(matches) > 1:
@@ -318,12 +318,11 @@ def command_9(db: sqlite3.Connection):
     @param db database
     """
     lat = float(input("\nEnter a latitude: "))
-    long = float(input("Enter a longitude: "))
-
     if lat < 40 or lat > 43:
         print("**Latitude entered is out of bounds...")
         return
 
+    long = float(input("Enter a longitude: "))
     if long < -88 or long > -87:
         print("**Longitude entered is out of bounds...")
         return
