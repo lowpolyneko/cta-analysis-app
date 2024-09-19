@@ -86,7 +86,7 @@ def command_4(db: sqlite3.Connection):
     Print all stops for line in direction
     @param db database
     """
-    color = input("\n\nEnter a line color (e.g. Red or Yellow): ")
+    color = input("\nEnter a line color (e.g. Red or Yellow): ")
     line = execute(db, f"""
         SELECT Line_ID FROM Lines
         Where Color = "{color}"
@@ -96,7 +96,7 @@ def command_4(db: sqlite3.Connection):
         print("**No such line...")
         return
 
-    direction = input("\n\nEnter a direction (N/S/W/E): ")
+    direction = input("Enter a direction (N/S/W/E): ")
 
     line_id = line[0][0]
     stops = execute(db, f"""
