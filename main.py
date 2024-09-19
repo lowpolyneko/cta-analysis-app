@@ -10,7 +10,7 @@ def command_1(db: sqlite3.Connection):
     search = input("Enter partial station name (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
-        WHERE Station_Name LIKE '{search}'
+        WHERE Station_Name LIKE "{search}"
         ORDER BY Station_Name ASC
     """)
 
@@ -28,7 +28,7 @@ def command_2(db: sqlite3.Connection):
     """
     search = input("Enter the name of the station you would like to analyze: ")
     match = execute(db, f"""
-        SELECT Station_ID FROM Stations WHERE Station_Name = '{search}'
+        SELECT Station_ID FROM Stations WHERE Station_Name = "{search}"
     """)
 
     if not match:
@@ -89,7 +89,7 @@ def command_4(db: sqlite3.Connection):
     color = input("Enter a line color (e.g. Red or Yellow): ")
     line = execute(db, f"""
         SELECT Line_ID FROM Lines
-        Where Color = '{color}'
+        Where Color = "{color}"
     """)
 
     if not line:
@@ -142,7 +142,7 @@ def command_6(db: sqlite3.Connection):
     search = input("Enter a station name (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
-        WHERE Station_Name LIKE '{search}'
+        WHERE Station_Name LIKE "{search}"
         ORDER BY Station_Name ASC
     """)
 
@@ -187,7 +187,7 @@ def command_7(db: sqlite3.Connection):
     search = input("Enter a station name (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
-        WHERE Station_Name LIKE '{search}'
+        WHERE Station_Name LIKE "{search}"
         ORDER BY Station_Name ASC
     """)
 
@@ -225,6 +225,92 @@ def command_7(db: sqlite3.Connection):
         plt.xticks(x)
         plt.plot(x, y)
         plt.savefig("command_7.png")
+
+def command_8(db: sqlite3.Connection):
+    """
+    Compares the ridership of two stations within a year
+    @param db database
+    """
+    year = input("Year to compare against? ")
+
+    search = input("Enter station 1 (wildcards _ and %): ")
+    matches = execute(db, f"""
+        SELECT * FROM Stations
+        WHERE Station_Name LIKE "{search}"
+        ORDER BY Station_Name ASC
+    """)
+
+    if not matches:
+        print("**No stations found...")
+        return
+
+    if len(matches) > 1:
+        print("**Multiple stations found...")
+        return
+
+    station_1_id, station_1_name = matches[0]
+
+    search = input("Enter station 2 (wildcards _ and %): ")
+    matches = execute(db, f"""
+        SELECT * FROM Stations
+        WHERE Station_Name LIKE "{search}"
+        ORDER BY Station_Name ASC
+    """)
+
+    if not matches:
+        print("**No stations found...")
+        return
+
+    if len(matches) > 1:
+        print("**Multiple stations found...")
+        return
+
+    station_2_id, station_2_name = matches[0]
+    
+    ridership_1 = execute(db, f"""
+        SELECT DATE(Ride_Date), CAST(strftime('%j', Ride_Date) AS INT), SUM(Num_Riders) FROM Ridership
+        WHERE Station_ID = {station_1_id} AND CAST(Ride_Date AS DATE) = {year}
+        GROUP BY DATE(Ride_Date)
+        ORDER BY DATE(Ride_Date)
+    """)
+
+    ridership_2 = execute(db, f"""
+        SELECT DATE(Ride_Date), CAST(strftime('%j', Ride_Date) AS INT), SUM(Num_Riders) FROM Ridership
+        WHERE Station_ID = {station_2_id} AND CAST(Ride_Date AS DATE) = {year}
+        GROUP BY DATE(Ride_Date)
+        ORDER BY DATE(Ride_Date)
+    """)
+
+    print(f"Station 1: {station_1_id} {station_1_name}")
+    for r in ridership_1[:5]: # first 5
+        print(f"{r[0]} {r[2]}")
+    for r in ridership_1[-5:]: # last 5
+        print(f"{r[0]} {r[2]}")
+
+    print(f"Station 2: {station_2_id} {station_2_name}")
+    for r in ridership_2[:5]: # first 5
+        print(f"{r[0]} {r[2]}")
+    for r in ridership_2[-5:]: # last 5
+        print(f"{r[0]} {r[2]}")
+
+    if input("Plot? (y/n) ") == "y":
+        # generate plot
+        plt.title(f"Ridership Each Day of {year}")
+        plt.xlabel("Day")
+        plt.ylabel("Number of Riders")
+        plt.xticks(range(0, 400, 50))
+
+        # station 1
+        # the first tuple value is ignored as that is the full date
+        _, x, y = zip(*ridership_1)
+        plt.plot(x, y, label=station_1_name)
+
+        # station 2
+        _, x, y = zip(*ridership_2)
+        plt.plot(x, y, label=station_2_name)
+
+        plt.legend()
+        plt.savefig("command_8.png")
 
 def execute(db: sqlite3.Connection, query: str) -> list:
     """
@@ -304,7 +390,8 @@ def main():
             command_7(db)
             continue
         elif i == '8':
-            pass
+            command_8(db)
+            continue
         elif i == '9':
             pass
         elif i == 'x':
