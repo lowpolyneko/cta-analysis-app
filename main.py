@@ -268,14 +268,14 @@ def command_8(db: sqlite3.Connection):
     station_2_id, station_2_name = matches[0]
     
     ridership_1 = execute(db, f"""
-        SELECT DATE(Ride_Date), CAST(strftime('%-j', Ride_Date) AS INT), SUM(Num_Riders) FROM Ridership
+        SELECT DATE(Ride_Date), CAST(strftime('%j', Ride_Date) AS INT), SUM(Num_Riders) FROM Ridership
         WHERE Station_ID = {station_1_id} AND CAST(Ride_Date AS DATE) = {year}
         GROUP BY DATE(Ride_Date)
         ORDER BY DATE(Ride_Date)
     """)
 
     ridership_2 = execute(db, f"""
-        SELECT DATE(Ride_Date), CAST(strftime('%-j', Ride_Date) AS INT), SUM(Num_Riders) FROM Ridership
+        SELECT DATE(Ride_Date), CAST(strftime('%j', Ride_Date) AS INT), SUM(Num_Riders) FROM Ridership
         WHERE Station_ID = {station_2_id} AND CAST(Ride_Date AS DATE) = {year}
         GROUP BY DATE(Ride_Date)
         ORDER BY DATE(Ride_Date)
@@ -283,15 +283,15 @@ def command_8(db: sqlite3.Connection):
 
     print(f"Station 1: {station_1_id} {station_1_name}")
     for r in ridership_1[:5]: # first 5
-        print(f"{r[0]} {r[2]}")
+        print(f"{r[0]:02} {r[2]}")
     for r in ridership_1[-5:]: # last 5
-        print(f"{r[0]} {r[2]}")
+        print(f"{r[0]:02} {r[2]}")
 
     print(f"Station 2: {station_2_id} {station_2_name}")
     for r in ridership_2[:5]: # first 5
-        print(f"{r[0]} {r[2]}")
+        print(f"{r[0]:02} {r[2]}")
     for r in ridership_2[-5:]: # last 5
-        print(f"{r[0]} {r[2]}")
+        print(f"{r[0]:02} {r[2]}")
 
     if input("\n\nPlot? (y/n) ") == "y":
         # generate plot
