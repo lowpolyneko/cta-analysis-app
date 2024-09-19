@@ -86,7 +86,7 @@ def command_4(db: sqlite3.Connection):
     Print all stops for line in direction
     @param db database
     """
-    color = input("\nEnter a line color (e.g. Red or Yellow): ")
+    color = input("Enter a line color (e.g. Red or Yellow): ")
     line = execute(db, f"""
         SELECT Line_ID FROM Lines
         Where Color = "{color}"
@@ -231,9 +231,9 @@ def command_8(db: sqlite3.Connection):
     Compares the ridership of two stations within a year
     @param db database
     """
-    year = input("\n\nYear to compare against? ")
+    year = input("Year to compare against? ")
 
-    search = input("Enter station 1 (wildcards _ and %): ")
+    search = input("\nEnter station 1 (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -250,7 +250,7 @@ def command_8(db: sqlite3.Connection):
 
     station_1_id, station_1_name = matches[0]
 
-    search = input("Enter station 2 (wildcards _ and %): ")
+    search = input("\nEnter station 2 (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -268,14 +268,14 @@ def command_8(db: sqlite3.Connection):
     station_2_id, station_2_name = matches[0]
     
     ridership_1 = execute(db, f"""
-        SELECT DATE(Ride_Date), CAST(strftime('%j', Ride_Date) AS INT), SUM(Num_Riders) FROM Ridership
+        SELECT DATE(Ride_Date), CAST(strftime('%-j', Ride_Date) AS INT), SUM(Num_Riders) FROM Ridership
         WHERE Station_ID = {station_1_id} AND CAST(Ride_Date AS DATE) = {year}
         GROUP BY DATE(Ride_Date)
         ORDER BY DATE(Ride_Date)
     """)
 
     ridership_2 = execute(db, f"""
-        SELECT DATE(Ride_Date), CAST(strftime('%j', Ride_Date) AS INT), SUM(Num_Riders) FROM Ridership
+        SELECT DATE(Ride_Date), CAST(strftime('%-j', Ride_Date) AS INT), SUM(Num_Riders) FROM Ridership
         WHERE Station_ID = {station_2_id} AND CAST(Ride_Date AS DATE) = {year}
         GROUP BY DATE(Ride_Date)
         ORDER BY DATE(Ride_Date)
@@ -317,8 +317,8 @@ def command_9(db: sqlite3.Connection):
     Given a set of lat/long, find all stations within a square mile
     @param db database
     """
-    lat = float(input("Enter a latitude: "))
-    long = float(input("Enter a longitude: "))
+    lat = float(input("\nEnter a latitude: "))
+    long = float(input("\nEnter a longitude: "))
 
     if lat < 40 or lat > 43:
         print("**Latitude entered is out of bounds...")
