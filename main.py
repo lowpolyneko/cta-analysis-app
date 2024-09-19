@@ -418,12 +418,12 @@ def main():
     # open db connection
     db = sqlite3.connect("CTA2_L_daily_ridership.db")
 
-    print("** Welcome to CTA L analysis app **")
+    print("** Welcome to CTA L analysis app **\n")
     print_stats(db)
 
     # main eval loop
     while True:
-        i = input("Please enter a command (1-9, x to exit): ")
+        i = input("\nPlease enter a command (1-9, x to exit): ")
 
         if i == '1':
             command_1(db)
