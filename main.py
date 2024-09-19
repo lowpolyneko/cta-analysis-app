@@ -345,6 +345,10 @@ def command_9(db: sqlite3.Connection):
         ORDER BY Station_Name
     """)
 
+    if not stations:
+        print("**No stations found...")
+        return
+
     print("\nList of Stations Within a Mile")
     for name, x, y in stations:
         print(f"{name} : ({x}, {y})")
