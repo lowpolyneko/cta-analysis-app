@@ -179,6 +179,53 @@ def command_6(db: sqlite3.Connection):
         plt.plot(x, y)
         plt.savefig("command_6.png")
 
+def command_7(db: sqlite3.Connection):
+    """
+    Matches a partial station name and outputs monthly ridership for a year
+    @param db database
+    """
+    search = input("Enter a station name (wildcards _ and %): ")
+    matches = execute(db, f"""
+        SELECT * FROM Stations
+        WHERE Station_Name LIKE '{search}'
+        ORDER BY Station_Name ASC
+    """)
+
+    if not matches:
+        print("**No stations found...")
+        return
+
+    if len(matches) > 1:
+        print("**Multiple stations found...")
+        return
+
+    year = input("Enter a year: ")
+
+    station_id, station_name = matches[0]
+    
+    ridership = execute(db, f"""
+        SELECT CAST(strftime('%m', Ride_Date) AS INT) AS Month, SUM(Num_Riders) FROM Ridership
+        WHERE Station_ID = {station_id} AND CAST(Ride_Date AS DATE) = {year}
+        GROUP BY Month
+        ORDER BY Month
+    """)
+
+    print(f"Monthly Ridership at {station_name} for {year}")
+    for r in ridership:
+        print(f"{r[0]}/{year} : {r[1]:,}")
+
+    if input("Plot? (y/n) ") == "y":
+        # generate plot
+        plt.title(f"Monthly Ridership at {station_name} Station ({year})")
+        plt.xlabel("Month")
+        plt.ylabel("Number of Riders")
+
+        # unpair points
+        x, y = zip(*ridership)
+        plt.xticks(x)
+        plt.plot(x, y)
+        plt.savefig("command_7.png")
+
 def execute(db: sqlite3.Connection, query: str) -> list:
     """
     Helper function that executes query in db
@@ -254,7 +301,8 @@ def main():
             command_6(db)
             continue
         elif i == '7':
-            pass
+            command_7(db)
+            continue
         elif i == '8':
             pass
         elif i == '9':
