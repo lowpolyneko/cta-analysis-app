@@ -86,7 +86,7 @@ def command_4(db: sqlite3.Connection):
     Print all stops for line in direction
     @param db database
     """
-    color = input("Enter a line color (e.g. Red or Yellow): ")
+    color = input("\nEnter a line color (e.g. Red or Yellow): ")
     line = execute(db, f"""
         SELECT Line_ID FROM Lines
         Where LOWER(Color) = LOWER("{color}")
@@ -139,7 +139,7 @@ def command_6(db: sqlite3.Connection):
     Matches a partial station name and outputs yearly total ridership
     @param db database
     """
-    search = input("Enter a station name (wildcards _ and %): ")
+    search = input("\nEnter a station name (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -184,7 +184,7 @@ def command_7(db: sqlite3.Connection):
     Matches a partial station name and outputs monthly ridership for a year
     @param db database
     """
-    search = input("Enter a station name (wildcards _ and %): ")
+    search = input("\nEnter a station name (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -199,7 +199,7 @@ def command_7(db: sqlite3.Connection):
         print("**Multiple stations found...")
         return
 
-    year = input("\n\nEnter a year: ")
+    year = input("Enter a year: ")
 
     station_id, station_name = matches[0]
     
@@ -212,7 +212,7 @@ def command_7(db: sqlite3.Connection):
 
     print(f"Monthly Ridership at {station_name} for {year}")
     for r in ridership:
-        print(f"{r[0]}/{year} : {r[1]:,}")
+        print(f"{r[0]:02}/{year} : {r[1]:,}")
 
     if input("\n\nPlot? (y/n) ") == "y":
         # generate plot
