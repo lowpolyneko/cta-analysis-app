@@ -7,7 +7,7 @@ def command_1(db: sqlite3.Connection):
     Matches a partial station name
     @param db database
     """
-    search = input("Enter partial station name (wildcards _ and %): ")
+    search = input("\n\nEnter partial station name (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -26,7 +26,7 @@ def command_2(db: sqlite3.Connection):
     Prints weekly ridership of a station
     @param db database
     """
-    search = input("Enter the name of the station you would like to analyze: ")
+    search = input("\n\nEnter the name of the station you would like to analyze: ")
     match = execute(db, f"""
         SELECT Station_ID FROM Stations WHERE Station_Name = "{search}"
     """)
@@ -86,7 +86,7 @@ def command_4(db: sqlite3.Connection):
     Print all stops for line in direction
     @param db database
     """
-    color = input("Enter a line color (e.g. Red or Yellow): ")
+    color = input("\n\nEnter a line color (e.g. Red or Yellow): ")
     line = execute(db, f"""
         SELECT Line_ID FROM Lines
         Where Color = "{color}"
@@ -96,7 +96,7 @@ def command_4(db: sqlite3.Connection):
         print("**No such line...")
         return
 
-    direction = input("Enter a direction (N/S/W/E): ")
+    direction = input("\n\nEnter a direction (N/S/W/E): ")
 
     line_id = line[0][0]
     stops = execute(db, f"""
@@ -139,7 +139,7 @@ def command_6(db: sqlite3.Connection):
     Matches a partial station name and outputs yearly total ridership
     @param db database
     """
-    search = input("Enter a station name (wildcards _ and %): ")
+    search = input("\n\nEnter a station name (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -167,7 +167,7 @@ def command_6(db: sqlite3.Connection):
     for r in ridership:
         print(f"{r[0]} : {r[1]:,}")
 
-    if input("Plot? (y/n) ") == "y":
+    if input("\n\nPlot? (y/n) ") == "y":
         # generate plot
         plt.title(f"Yearly Ridership at {station_name} Station")
         plt.xlabel("Year")
@@ -184,7 +184,7 @@ def command_7(db: sqlite3.Connection):
     Matches a partial station name and outputs monthly ridership for a year
     @param db database
     """
-    search = input("Enter a station name (wildcards _ and %): ")
+    search = input("\n\nEnter a station name (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -199,7 +199,7 @@ def command_7(db: sqlite3.Connection):
         print("**Multiple stations found...")
         return
 
-    year = input("Enter a year: ")
+    year = input("\n\nEnter a year: ")
 
     station_id, station_name = matches[0]
     
@@ -214,7 +214,7 @@ def command_7(db: sqlite3.Connection):
     for r in ridership:
         print(f"{r[0]}/{year} : {r[1]:,}")
 
-    if input("Plot? (y/n) ") == "y":
+    if input("\n\nPlot? (y/n) ") == "y":
         # generate plot
         plt.title(f"Monthly Ridership at {station_name} Station ({year})")
         plt.xlabel("Month")
@@ -231,9 +231,9 @@ def command_8(db: sqlite3.Connection):
     Compares the ridership of two stations within a year
     @param db database
     """
-    year = input("Year to compare against? ")
+    year = input("\n\nYear to compare against? ")
 
-    search = input("Enter station 1 (wildcards _ and %): ")
+    search = input("\n\nEnter station 1 (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -250,7 +250,7 @@ def command_8(db: sqlite3.Connection):
 
     station_1_id, station_1_name = matches[0]
 
-    search = input("Enter station 2 (wildcards _ and %): ")
+    search = input("\n\nEnter station 2 (wildcards _ and %): ")
     matches = execute(db, f"""
         SELECT * FROM Stations
         WHERE Station_Name LIKE "{search}"
@@ -293,7 +293,7 @@ def command_8(db: sqlite3.Connection):
     for r in ridership_2[-5:]: # last 5
         print(f"{r[0]} {r[2]}")
 
-    if input("Plot? (y/n) ") == "y":
+    if input("\n\nPlot? (y/n) ") == "y":
         # generate plot
         plt.title(f"Ridership Each Day of {year}")
         plt.xlabel("Day")
@@ -317,8 +317,8 @@ def command_9(db: sqlite3.Connection):
     Given a set of lat/long, find all stations within a square mile
     @param db database
     """
-    lat = float(input("Enter a latitude: "))
-    long = float(input("Enter a longitude: "))
+    lat = float(input("\n\nEnter a latitude: "))
+    long = float(input("\n\nEnter a longitude: "))
 
     if lat < 40 or lat > 43:
         print("**Latitude entered is out of bounds...")
@@ -351,7 +351,7 @@ def command_9(db: sqlite3.Connection):
         print(f"{name} : ({x}, {y})")
 
     # create plot
-    if input("Plot? (y/n) ") == "y":
+    if input("\n\nPlot? (y/n) ") == "y":
         image = plt.imread("chicago.png")
         xydims = [-87.9277, -87.5569, 41.7012, 42.0868] # area covered by map
         plt.imshow(image, extent=xydims)
