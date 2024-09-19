@@ -341,7 +341,7 @@ def command_9(db: sqlite3.Connection):
         JOIN Stations ON Stops.Station_ID = Stations.Station_ID
         WHERE Latitude BETWEEN {min_lat} AND {max_lat}
         AND Longitude BETWEEN {min_long} AND {max_long}
-        GROUP BY Stops.Station_ID
+        GROUP BY Latitude, Longitude
         ORDER BY Station_Name
     """)
 
